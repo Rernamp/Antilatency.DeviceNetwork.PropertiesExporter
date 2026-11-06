@@ -25,7 +25,7 @@ public:
         std::unique_lock<std::mutex> lock(m_mutex);
 
         // Add item
-        m_queue.push(item);
+        m_queue.push(std::move(item));
 
         // Notify one thread that
         // is waiting
@@ -44,7 +44,7 @@ public:
                     [this]() { return !m_queue.empty(); });
 
         // retrieve item
-        T item = m_queue.front();
+        T item = std::move(m_queue.front());
         m_queue.pop();
 
         // return item

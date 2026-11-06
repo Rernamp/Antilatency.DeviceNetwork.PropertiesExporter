@@ -14,6 +14,7 @@ void fillComandLineArguments(CLI::App& app, ApplicationSettings& settings, std::
     app.add_option("--waitDeviceTimeout", settings.waitDeviceTimeout_ms, "Wait device timeout, ms")->check(CLI::NonNegativeNumber)->capture_default_str();
     app.add_flag("--ipDevices", settings.enableIpDevices, "Enable IP devices in device network")->capture_default_str();
     app.add_flag("--printProgress", settings.printProgress, "Enable printing progress of capture")->capture_default_str();
+    app.add_flag("--measureTiming", settings.measureTiming, "Measure duration of each property read and save timing summary")->capture_default_str();
 }
 
 int main(int argc, char** argv) {
@@ -55,6 +56,11 @@ int main(int argc, char** argv) {
 
     if (configSettings.dumpProperties.empty() || configSettings.targetDeviceProperties.empty()) {
         std::cout << "json filed dumpProperties or targetDeviceProperties empty" << std::endl;
+        return -1;
+    }
+
+    if (configSettings.trigger && configSettings.trigger->waitUntil.propertyName.empty()) {
+        std::cout << "json field trigger.waitUntil.propertyName empty" << std::endl;
         return -1;
     }
 
